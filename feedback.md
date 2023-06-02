@@ -1,0 +1,1 @@
+This sounds like a great idea, and if you achieve this, your final paper could be great. However, it is not easy, so perhaps you should be careful with how much work you take on. Your proposal would have been helped with details on which is the target sport, and which objects in that sport will be tracked and how that could contribute to the understanding of the sport.
