@@ -1,6 +1,6 @@
 # tells pip what build tool to use to build your package
 [build-system]
-requires = ["setuptools>=61", "wheel"]
+requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
