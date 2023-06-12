@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-"""Main module of the project."""	
+"""Main module of the project."""
 
 import argparse
+from sport.data import load_data
 
 
 def main() -> None:
@@ -15,7 +16,11 @@ def main() -> None:
 
     print("Hello World!")
 
+    if _:
+        load_data()
+
     return
+
 
 if __name__ == "__main__":
     main()
