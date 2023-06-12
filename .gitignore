@@ -1,0 +1,9 @@
+# python
+venv
+__pycache__/
+*.egg-info/
+
+# general
+.vscode
+wandb/
+data/
