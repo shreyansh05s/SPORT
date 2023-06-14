@@ -8,3 +8,8 @@ Sports Object Recognition and Tracking
 ```bash
 pip install -e .
 ```
+
+## Dataset
+SportsMOT: A Large Multi-Object Tracking Dataset in Multiple Sports Scenes
+
+link: https://codalab.lisn.upsaclay.fr/competitions/12424
