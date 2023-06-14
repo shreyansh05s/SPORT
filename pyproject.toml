@@ -7,17 +7,20 @@ build-backend = "setuptools.build_meta"
 name = "sport"
 readme = "README.md"
 version = "0.0.1"
-authors = [{name = "Shreyansh Sharma"}]
+authors = [{ name = "Shreyansh Sharma" }]
 description = "Sports Object Recognition and Tracking"
 
 ## Dependencies
 dependencies = [
-    "torch",
-    "torchvision",
-    "numpy",
-    "wandb",
-    "datasets",
-    ]
+    "torch", 
+    "torchvision", 
+    "numpy", 
+    "wandb", 
+    "datasets", 
+    "av",
+    "transformers",
+    "opencv-python",
+]
 requires-python = ">=3.11"
 
 # Entry Points
@@ -26,4 +29,7 @@ sport = "sport.cli:main"
 
 # For removing pylint import errors
 [MASTER]
-init-hook="from pylint.config import find_pylintrc; import os, sys; sys.path.append(os.path.dirname(find_pylintrc()))"
+init-hook = "from pylint.config import find_pylintrc; import os, sys; sys.path.append(os.path.dirname(find_pylintrc()))"
+
+[tool.setuptools]
+py-modules = ["sport"]
