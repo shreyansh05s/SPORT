@@ -9,6 +9,13 @@
     https://github.com/MCG-NJU/MixFormerV2
 )
 
+- [] [Transformer Trajectory](
+    https://huggingface.co/docs/transformers/model_doc/trajectory_transformer
+)
+
 ## Dataset
 SPORTS-MOT
 Link : https://huggingface.co/datasets/MCG-NJU/MultiSports
+
+## Notes
+- Video MAE and Timesformer 
