@@ -6,4 +6,4 @@ __pycache__/
 # general
 .vscode
 wandb/
-data/
+dataset/
