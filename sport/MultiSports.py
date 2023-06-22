@@ -8,6 +8,7 @@ import pandas as pd
 from PIL import Image
 from torch.utils.data import Dataset
 import torchvision.transforms as transforms
+from transformers import AutoImageProcessor
 
 
 class SportsMOTDataset(Dataset):
@@ -20,24 +21,30 @@ class SportsMOTDataset(Dataset):
         sequence_length (int): length of the sequence
     """
 
-    def __init__(self, root_dir, data_type="train", sequence_length=16) -> None:
+    def __init__(
+        self, root_dir, data_type="train", sequence_length=16, image_processor=None
+    ) -> None:
+        #############################
+        # TODO: Absolutize the path  #
+        #############################
         # use the absolute path of the root directory
         self.root_dir = os.path.join(root_dir, data_type)
         self.video_names = os.listdir(self.root_dir)
         self.sequence_length = sequence_length
+        self.image_processor = image_processor
 
-        self.transform = transforms.Compose(
-            [
-                transforms.ToPILImage(),
-                transforms.Resize(
-                    (224, 224)
-                ),  # Or whatever size is required by your model
-                transforms.ToTensor(),
-                transforms.Normalize(
-                    mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
-                ),
-            ]
-        )
+        if image_processor is None:
+            self.transform = transforms.Compose(
+                [
+                    transforms.ToPILImage(),
+                    transforms.Resize((224, 224)),
+                    transforms.ToTensor(),
+                ]
+            )
+        else:
+            self.transform = transforms.Compose(
+                [transforms.ToPILImage(), self.process_image]
+            )
 
         # calculate the length of total sequences
         self.total_sequences = [
@@ -52,6 +59,11 @@ class SportsMOTDataset(Dataset):
 
     def __len__(self) -> int:
         return sum(self.total_sequences)
+
+    def process_image(self, image):
+        inputs = self.image_processor(image, return_tensors="pt")
+        inputs = {k: v.squeeze(0) for k, v in inputs.items()}
+        return inputs
 
     def __getitem__(self, idx):
         # find the video name and the frame number
@@ -85,30 +97,48 @@ class SportsMOTDataset(Dataset):
         ]
 
         sequence_files = video_files[frame_idx : frame_idx + self.sequence_length]
-        sequence: np.ndarray = []
-        label_sequence: torch.Tensor = []
+
+        results = {
+            "pixel_values": torch.tensor([]),
+            "pixel_mask": torch.tensor([]),
+            "labels": [],
+            "boxes": torch.tensor([]),
+            "id": torch.tensor([], dtype=torch.int64),
+        }
 
         for seq_idx, sequence_file in enumerate(sequence_files):
             # load image from file and convert to tensor
             img = Image.open(sequence_file)
             img = np.array(img)
 
-            img = self.transform(img)
-            sequence.append(img)
+            inputs = self.transform(img)
 
             # Getting corresponding labels
             frame_num = (
                 frame_idx + seq_idx + 1
             )  # Assuming that the frame numbers start from 1
             label_df = gt_df[gt_df["frame"] == frame_num]
-            seq = label_df[
-                ["id", "bb_left", "bb_top", "bb_width", "bb_height", "conf"]
-            ].values.tolist()
-            label_sequence.append(torch.tensor(seq))
 
-        sequence = torch.stack(
-            sequence, dim=0
-        )  # Convert list of tensors to a single 4D tensor
-        # label_sequence = np.array(label_sequence)  # Convert list of arrays to a single 3D array
+            boxes = torch.tensor(
+                label_df[
+                    ["bb_left", "bb_top", "bb_width", "bb_height"]
+                ].values.tolist(),
+                dtype=torch.float32,
+            )
 
-        return sequence, label_sequence
+            # labels for DETR (List[Dict] of len `(batch_size,)`, *optional*):
+            class_labels = torch.ones((boxes.shape[0],), dtype=torch.long)
+
+            labels = [{"class_labels": class_labels, "boxes": boxes}]
+
+            # instead of returning list return a dictionary with concatenated tensors
+            results["pixel_values"] = torch.cat(
+                (results["pixel_values"], inputs["pixel_values"])
+            )
+            results["pixel_mask"] = torch.cat(
+                (results["pixel_mask"], inputs["pixel_mask"])
+            )
+            # results["id"] = torch.cat((results["id"], torch.tensor(label_df["id"].values, dtype=torch.int64)))
+            results["labels"] += labels
+
+        return results
