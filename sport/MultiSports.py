@@ -102,14 +102,23 @@ class SportsMOTDataset(Dataset):
             "pixel_values": torch.tensor([]),
             "pixel_mask": torch.tensor([]),
             "labels": [],
-            "boxes": torch.tensor([]),
+            # "boxes": torch.tensor([]),
             "id": torch.tensor([], dtype=torch.int64),
+            "image": None,
+            "video_name": video_name,
+            # save string paths for visualization
+            "image_path": [os.path.join(video_dir, vf).__str__() for vf in sequence_files], 
         }
 
         for seq_idx, sequence_file in enumerate(sequence_files):
             # load image from file and convert to tensor
             img = Image.open(sequence_file)
             img = np.array(img)
+            
+            if seq_idx == 0:
+                results["image"] = np.array(img)
+            else:
+                results["image"] = np.concatenate((results["image"], img), axis=0)
 
             inputs = self.transform(img)
 
@@ -138,7 +147,7 @@ class SportsMOTDataset(Dataset):
             results["pixel_mask"] = torch.cat(
                 (results["pixel_mask"], inputs["pixel_mask"])
             )
-            # results["id"] = torch.cat((results["id"], torch.tensor(label_df["id"].values, dtype=torch.int64)))
+            results["id"] = torch.cat((results["id"], torch.tensor(label_df["id"].values, dtype=torch.int64)))
             results["labels"] += labels
 
         return results
