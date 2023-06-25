@@ -21,6 +21,9 @@ dependencies = [
     "transformers",
     "opencv-python",
     "pillow",
+    "timm",
+    "scikit-learn",
+    "deep_sort_realtime"
 ]
 requires-python = ">=3.11"
 
