@@ -5,7 +5,7 @@ import os
 import argparse
 
 import torch
-from sport.cli import add_eval_args, eval, add_infer_args, infer
+from sport.cli import eval, infer, demo, add_eval_args, add_infer_args
 from sport import get_project_dir
 
 def main() -> None:
@@ -21,14 +21,15 @@ def main() -> None:
     # subparser_train = subparsers.add_parser("train", help="Train the model")
     subparser_eval = subparsers.add_parser("eval", help="Evaluate the model")
     subparser_infer = subparsers.add_parser("infer", help="Infer the model")
+    subparser_demo = subparsers.add_parser("demo", help="Run the demo")
 
     subparser_eval = add_eval_args(add_common_args(subparser_eval))
     subparser_infer = add_infer_args(add_common_args(subparser_infer))
-    
+    subparser_demo = add_demo_args(add_common_args(subparser_demo))
 
     args = parser.parse_args()
     
-    args.dataset_dir = os.path.join(get_project_dir(), args.dataset_dir)
+    args.dataset_dir = os.path.join(get_project_dir(), args.dataset_dir, "dataset")
     
     args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -36,6 +37,8 @@ def main() -> None:
         eval(args)
     elif args.cmd == "infer":
         infer(args)
+    elif args.cmd == "demo":
+        demo(args)
     else:
         raise ValueError(f"Unknown command: {args.cmd}")
 
@@ -49,7 +52,7 @@ def add_common_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--dataset_dir",
         help="Path to dataset directory",
         type=str,
-        default="dataset/sportsmot_publish/dataset",
+        default="dataset/sportsmot_publish",
     )
     parser.add_argument(
         "-m",
@@ -83,9 +86,11 @@ def add_common_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     #############################
     # DeepSORT specific arguments
     #############################
-    parser.add_argument("--max_age", help="Maximum age", type=int, default=70)
-    parser.add_argument("--n_init", help="Number of initial frames", type=int, default=0)
+    parser.add_argument("--max_age", help="Maximum age", type=int, default=10)
+    parser.add_argument("--n_init", help="Number of initial frames", type=int, default=3)
+    parser.add_argument("--nn_budget", help="NN budget", type=int, default=100)
     #############################
+    
 
     return parser
 

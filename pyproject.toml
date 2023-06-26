@@ -25,6 +25,7 @@ dependencies = [
     "scikit-learn",
     "deep_sort_realtime",
     "pycocotools",
+    "streamlit",
 ]
 requires-python = ">=3.11"
 

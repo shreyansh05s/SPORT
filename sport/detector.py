@@ -53,7 +53,7 @@ class ObjectDetectionModel(torch.nn.Module):
         # post process if eval mode
         if not self.train:
             coco_data = self.image_processor.post_process_object_detection(
-                outputs, threshold=0.9, target_sizes=torch.tensor([(720, 1280)])
+                outputs, threshold=0.95, target_sizes=torch.tensor([(720, 1280)])
             )[0]
             
             # filter results by label for person

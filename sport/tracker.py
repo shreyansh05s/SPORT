@@ -16,6 +16,7 @@ class ObjectTrackingModel:
             self.tracker = DeepSort(
                 max_age=args.max_age,
                 n_init=args.n_init,
+                nn_budget=args.nn_budget,
             )
         else:
             raise ValueError(f"Unknown tracker: {args.tracker}")
