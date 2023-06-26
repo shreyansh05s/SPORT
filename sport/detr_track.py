@@ -2,38 +2,26 @@
 
 from scipy.optimize import linear_sum_assignment
 from torch.nn.functional import mse_loss
+from pycocotools.coco import COCO
+from pycocotools.cocoeval import COCOeval
 import torch
 import os
 import torch.nn as nn
+from PIL import Image
 import numpy as np
 from tqdm.auto import tqdm
 from transformers import (
     DetrConfig,
     DetrModel,
     DetrForObjectDetection,
-    ViTModel,
     AutoImageProcessor,
     DetrFeatureExtractor,
 )
 from sport.MultiSports import SportsMOTDataset
 
 
-class SiameseNetwork(nn.Module):
-    def __init__(self):
-        super(SiameseNetwork, self).__init__()
-        self.model = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
-        self.model.eval()
-        self.fc = nn.Linear(256, 128)
-
-    def forward(self, x1, x2):
-        x1 = self.model(x1)[0]
-        x2 = self.model(x2)[0]
-        x1 = self.fc(x1)
-        x2 = self.fc(x2)
-        return torch.cosine_similarity(x1, x2, dim=-1)
-
 class DetrForTracking(nn.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super(DetrForTracking, self).__init__()
 
         # change the config to only have 2 class
@@ -48,7 +36,7 @@ class DetrForTracking(nn.Module):
                 ignore_mismatched_sizes=True,
             )
         )
-        
+
         # freeze the model except the last layer
         if True:
             for param in self.detr_model.parameters():
@@ -58,107 +46,67 @@ class DetrForTracking(nn.Module):
             for param in self.detr_model.bbox_predictor.parameters():
                 param.requires_grad = True
 
-        # self.siamese_net = SiameseNetwork()
-        # self.bbox_predictor = MLPPredictionHead(
-        #     input_dim=256, hidden_dim=256, output_dim=4, num_layers=3
-        # )
+        return
 
-    def forward(self, img, prev_features=None):
+    def forward(self, img, prev_features=None) -> torch.Tensor:
         # Object detection
         outputs = self.detr_model(**img)
 
-        logits = outputs.logits
-        pred_boxes = outputs.pred_boxes
-        encoder_last_hidden_state = outputs.encoder_last_hidden_state
-        logits = outputs.logits
-        loss = outputs.loss
-
-        # Object matching
-        similarity_scores = None
-        # if prev_features is not None:
-        #     similarity_scores = self.siamese_net(
-        #         prev_features, encoder_last_hidden_state
-        #     )
-
-        return similarity_scores, loss
-
-    def compute_loss(self, similarity_scores, labels, pred_boxes, true_boxes):
-        # Compute the Siamese network loss
-        loss_siamese = 0
-        if similarity_scores is not None:
-            loss_fn_siamese = nn.BCEWithLogitsLoss()
-            loss_siamese = loss_fn_siamese(similarity_scores, labels)
-
-        # compute DETR loss
-        matcher = HungarianMatcher(cost_class=1, cost_bbox=5, cost_giou=2)
-        loss_boxes = 0
-        if pred_boxes is not None:
-            loss_fn_boxes = DetrLoss(
-                num_classes=1,
-                matcher=matcher,
-                weight_dict={"loss_ce": 1, "loss_bbox": 5, "loss_giou": 2},
-                eos_coef=0.1,
-                losses=["labels", "boxes", "cardinality"],
-            )
-            loss_boxes = loss_fn_boxes(pred_boxes, true_boxes)
-
-        # Combine the losses
-        loss = loss_siamese + loss_boxes
-        return loss
+        return outputs
 
 
 def train(
     model: DetrForTracking,
     dataloader: SportsMOTDataset,
     optimizer: torch.optim.Optimizer,
+    scheduler: torch.optim.lr_scheduler,
     device: torch.device,
-    epochs: int,
 ):
     model.train()
     total_loss = 0
-    
+
     # tqdm progress bar
     tqdm_bar = tqdm(dataloader, desc="Training", total=len(dataloader))
 
-    for i in range(epochs):
-        
-        for inputs in tqdm_bar:
+    for inputs in tqdm_bar:
+        labels = inputs["labels"]
+        # ids = [i.to(device) for i in inputs["id"]]
 
-            labels = inputs["labels"]
-            # ids = [i.to(device) for i in inputs["id"]]
-            
-            # labels is a List[Dict[Tensor]] where the size of the list is the batch size
-            # now we need to put all the tensors to device
-            labels = [{k: v.to(device) for k, v in l.items()} for l in labels]
+        # labels is a List[Dict[Tensor]] where the size of the list is the batch size
+        # now we need to put all the tensors to device
+        labels = [{k: v.to(device) for k, v in l.items()} for l in labels]
 
-            inputs = {
-                k: v.to(device)
-                for k, v in inputs.items()
-                if k in ["pixel_values", "pixel_mask"]
-            }
+        inputs = {
+            k: v.to(device)
+            for k, v in inputs.items()
+            if k in ["pixel_values", "pixel_mask"]
+        }
 
-            inputs["labels"] = labels
+        inputs["labels"] = labels
 
-            prev_features = None
+        prev_features = None
 
-            prev_features = prev_features.to(device) if prev_features is not None else None
+        prev_features = prev_features.to(device) if prev_features is not None else None
 
-            # Forward pass
-            similarity_scores, loss = model(inputs, prev_features)
+        # Forward pass
+        outputs = model(inputs, prev_features)
 
-            # Compute the loss
-            # loss = model.compute_loss(similarity_scores, labels, pred_boxes, true_boxes)
+        loss = outputs.loss
 
-            # Backward pass and optimization
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
+        # Compute the loss
+        # loss = model.compute_loss(similarity_scores, labels, pred_boxes, true_boxes)
 
-            total_loss += loss.item()
-            
-            tqdm_bar.set_description(f"Loss: {loss.item():.4f}")
+        # Backward pass and optimization
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        scheduler.step()
 
-        avg_loss = total_loss / len(dataloader)
+        total_loss += loss.item()
+
+        tqdm_bar.set_description(f"Loss: {loss.item():.4f}")
+
+    avg_loss = total_loss / len(dataloader)
     return avg_loss
 
 
@@ -172,6 +120,7 @@ def collate_fn(batch):
         "labels": [x["labels"][0] for x in batch],
         # "boxes": [x["boxes"] for x in batch],
         # "id": [x["id"] for x in batch],
+        "image": np.array([x["image"] for x in batch]),
     }
 
 
@@ -203,10 +152,10 @@ def main():
 
     # Instantiate the dataloader
     train_dataloader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=8, shuffle=True, num_workers=4, collate_fn=collate_fn
+        train_dataset, batch_size=4, shuffle=True, num_workers=4, collate_fn=collate_fn
     )
     val_dataloader = torch.utils.data.DataLoader(
-        val_dataset, batch_size=2, shuffle=False, num_workers=4, collate_fn=collate_fn
+        val_dataset, batch_size=4, shuffle=False, num_workers=4, collate_fn=collate_fn
     )
 
     # Initialize the model
@@ -214,10 +163,22 @@ def main():
     model.to(device)
 
     # Initialize the optimizer
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-2)
 
-    # Train the model
-    train(model, train_dataloader, optimizer, device, epochs=5)
+    # scheduler
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=100, gamma=0.95)
+
+    epochs = 5
+
+    for i in range(epochs):
+        # Train the model
+        train(model, train_dataloader, optimizer, scheduler, device)
+
+        # Evaluate the model
+        # evaluate(model, val_dataloader, device)
+
+        # Save the model
+        torch.save(model.state_dict(), f"models/detr_{i}.pth")
 
     return
 
