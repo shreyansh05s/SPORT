@@ -12,11 +12,12 @@ from tqdm.auto import tqdm
 import cv2
 import torch
 from sport import get_project_dir
-from sport import SportsMOTDataset
+from sport import SportsMOTDataset, get_pretrained
 from sport.cli.main import add_common_args
 from sport.cli.infer import add_infer_args
 from sport.detector import ObjectDetectionModel
 from sport.tracker import ObjectTrackingModel
+from sport.detector import models
 
 
 # cache the model and dataset for stremalit app
@@ -55,6 +56,10 @@ def demo(args: argparse.Namespace) -> None:
     st.title("Sports Object Recognition And Tracking")
     st.write("This is a demo of the Sports Object Recognition And Tracking project.")
 
+    # model selection
+    model = st.selectbox("Select Model", models.keys())
+    args.model = model
+    
     # drop down menu to select the video type
     video_type = st.selectbox("Select Video Type", ["football", "basketball", "volleyball"])
     
@@ -73,6 +78,8 @@ def demo(args: argparse.Namespace) -> None:
     start_demo = st.button("Start Demo")
 
     if start_demo:
+        # get pretrained model
+        args.pretrained_model = get_pretrained(args)
         
         # load model
         object_detector, tracker = load_model(args)

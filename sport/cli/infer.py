@@ -7,12 +7,15 @@ from tqdm.auto import tqdm
 
 import torch
 import numpy as np
-from sport import SportsMOTDataset
+from sport import SportsMOTDataset, get_pretrained
 from sport.detector import ObjectDetectionModel
 from sport.tracker import ObjectTrackingModel
 
 
 def infer(args: argparse.Namespace) -> None:
+    # get pretrained model
+    args.pretrained_model = get_pretrained(args)
+    
     # load dataset
     print("Loading dataset...")
     val_dataset = SportsMOTDataset(

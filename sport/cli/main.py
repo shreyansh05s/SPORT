@@ -25,7 +25,7 @@ def main() -> None:
 
     subparser_eval = add_eval_args(add_common_args(subparser_eval))
     subparser_infer = add_infer_args(add_common_args(subparser_infer))
-    subparser_demo = add_demo_args(add_common_args(subparser_demo))
+    subparser_demo = add_common_args(subparser_demo)
 
     args = parser.parse_args()
     
@@ -59,7 +59,6 @@ def add_common_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--model",
         help="Object Detection Model name",
         type=str,
-        choices=["DETR"],
         default="DETR",
     )
     parser.add_argument(
@@ -75,8 +74,8 @@ def add_common_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--pretrained_model",
         help="Pretrained model",
         type=str,
-        default="facebook/detr-resnet-50",
-    )
+        default=None,
+    )    
     parser.add_argument("--num_labels", help="Number of labels", type=int, default=None)
     parser.add_argument("--num_workers", help="Number of workers", type=int, default=4)
     parser.add_argument("--epochs", help="Number of epochs", type=int, default=10)
