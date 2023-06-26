@@ -9,3 +9,5 @@ wandb/
 dataset/
 outputs/
 models/
+*Zone.Identifier
+```
