@@ -23,7 +23,8 @@ dependencies = [
     "pillow",
     "timm",
     "scikit-learn",
-    "deep_sort_realtime"
+    "deep_sort_realtime",
+    "pycocotools",
 ]
 requires-python = ">=3.11"
 
