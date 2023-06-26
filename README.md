@@ -14,6 +14,11 @@ SportsMOT: A Large Multi-Object Tracking Dataset in Multiple Sports Scenes
 
 link: https://codalab.lisn.upsaclay.fr/competitions/12424
 
+## Demo
+```bash
+python streamlit run sport/cli/demo.py
+```
+
 ## References
 
 [1] SportsMOT: A Large Multi-Object Tracking Dataset in Multiple Sports Scenes
