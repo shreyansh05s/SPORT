@@ -10,4 +10,9 @@ dataset/
 outputs/
 models/
 *Zone.Identifier
+*.log
+*.fls
+*.aux
+*.fdb_latexmk
+*.synctex.gz
 ```
