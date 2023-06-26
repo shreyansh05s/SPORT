@@ -15,4 +15,8 @@ models/
 *.aux
 *.fdb_latexmk
 *.synctex.gz
+data/
+results/
+TrackEval/
+outputs2/
 ```
