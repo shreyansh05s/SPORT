@@ -8,7 +8,7 @@ import pandas as pd
 from PIL import Image
 from torch.utils.data import Dataset
 import torchvision.transforms as transforms
-from transformers import AutoImageProcessor
+from transformers import AutoImageProcessor, AutoConfig
 
 
 class SportsMOTDataset(Dataset):
@@ -22,18 +22,19 @@ class SportsMOTDataset(Dataset):
     """
 
     def __init__(
-        self, root_dir, data_type="train", sequence_length=16, image_processor=None
+        self, args, data_type="train", sequence_length=1,
     ) -> None:
-        #############################
-        # TODO: Absolutize the path  #
-        #############################
-        # use the absolute path of the root directory
-        self.root_dir = os.path.join(root_dir, data_type)
+        
+        self.root_dir = os.path.join(args.dataset_dir, data_type)
         self.video_names = os.listdir(self.root_dir)
-        self.sequence_length = sequence_length
-        self.image_processor = image_processor
+        if args.video_name:
+            self.video_names = [args.video_name]
 
-        if image_processor is None:
+        self.sequence_length = sequence_length
+        self.config = AutoConfig.from_pretrained(args.pretrained_model)
+        self.image_processor = AutoImageProcessor.from_pretrained(args.pretrained_model, config=self.config)
+
+        if self.image_processor is None:
             self.transform = transforms.Compose(
                 [
                     transforms.ToPILImage(),

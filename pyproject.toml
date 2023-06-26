@@ -30,7 +30,7 @@ requires-python = ">=3.11"
 
 # Entry Points
 [project.scripts]
-sport = "sport.cli:main"
+sport = "sport.cli.main:main"
 
 # For removing pylint import errors
 [MASTER]
