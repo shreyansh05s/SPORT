@@ -7,7 +7,7 @@ from transformers import AutoConfig, AutoModelForObjectDetection, AutoImageProce
 
 models = {
     "DETR": {
-        "default": "facebook/detr-resnet-50",
+        "default": "facebook/detr-resnet-101",
         "pretrained": ["facebook/detr-resnet-50", "facebook/detr-resnet-101"],
         "threshold": 0.95
     },
