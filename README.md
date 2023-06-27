@@ -52,15 +52,37 @@ The demo allows you to select the sport and the model to use for object detectio
 python streamlit run sport/cli/demo.py
 ```
 
+<!-- Add image of the web app from folder `images` -->
+![Demo](docs/report/images/sport_demo.png)
+
+## Inference
+This command will run the object detection and tracking on a video file from the dataset and save the result in a text file.
+```bash
+sport infer --video_name <video_name>
+```
+
+## Training
+This command will train the object detection and tracking model.
+```bash
+sport train
+```
+
+For training on a different model(DETR or ConditionalDETR):
+```bash
+sport train --model <model_name>
+```
+
+Other arguments:
+- `--dataset_dir <path_to_dataset>`: Path to the dataset folder
+- `--batch_size <batch_size>`: Batch size
+- `--num_workers <num_workers>`: Number of workers for data loading
+- `--epochs <epochs>`: Number of epochs
+- `--lr <lr>`: Learning rate
+- `--weight_decay <weight_decay>`: Weight decay
+
+Other arguments can be found using `sport train --help`
+
 ## References
 
 [1] SportsMOT: A Large Multi-Object Tracking Dataset in Multiple Sports Scenes
 \[[arXiv](https://arxiv.org/abs/2109.14834)\]
-<!-- TODO -->
-\[[Project]()\]
-
-[2] DeepSORT: Deep Learning to Track Custom Objects with PyTorch
-\[[arXiv](https://arxiv.org/abs/1703.07402)\]
-
-[3] TransTrack: Multiple-Object Tracking with Transformer
-\[[arXiv](https://arxiv.org/pdf/2012.15460v2.pdf)\]
