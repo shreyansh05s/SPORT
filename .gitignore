@@ -6,14 +6,9 @@ __pycache__/
 # general
 .vscode
 wandb/
-dataset/
-outputs/
 models/
 *Zone.Identifier
-data/
-results/
 TrackEval/
-outputs2/
 
 # latex
 *.log
@@ -23,4 +18,7 @@ outputs2/
 *.synctex.gz
 *.bbl
 *.blg
-```
+
+# dataset
+sportsmot_publish/
+```	
