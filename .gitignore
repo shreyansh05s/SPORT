@@ -5,10 +5,7 @@ __pycache__/
 
 # general
 .vscode
-wandb/
-models/
 *Zone.Identifier
-TrackEval/
 
 # latex
 *.log
@@ -21,4 +18,7 @@ TrackEval/
 
 # dataset
 sportsmot_publish/
+models/
+results/
+TrackEval/
 ```	
