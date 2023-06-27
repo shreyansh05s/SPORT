@@ -114,6 +114,10 @@ The objects are then assigned to the predicted position based on the similarity 
 The similarity is calculated using the Hungarian algorithm \cite{hungarian1955} for which features are extracted from the detected objects using a pre-trained model.
 This process is repeated for each frame of the video.
 
+Deep SORT algorithm has multiple hyperparameters that can be tuned to improve the tracking performance.
+The hyperparameters include the maximum cosine distance, the minimum cosine distance, the maximum age, and the minimum number of hits.
+These also introduce a challenge of finding the optimal hyperparameters for the given dataset.
+
 
 \section{Dataset}
 % Explain a little bit about the dataset SportsMot
