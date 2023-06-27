@@ -22,7 +22,7 @@
 %
 \author{Shreyansh Sharma\inst{1}\orcidID{S3772241} }
 %
-\authorrunning{S. Sharma et al.}
+\authorrunning{S. Sharma}
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
@@ -38,7 +38,7 @@
 % 
 Sports object recognition and tracking is a challenging task in computer vision. 
 This paper presents and compares different methods for object recognition and tracking in sports videos.
-Th focus lies on utilizing pre-trained models to reduce the training time and improve the accuracy of the model.
+Pretrained models are used to reduce the training time and improve the accuracy of the models.
 Along with the comparison, a framework is proposed to evaluate the performance of the models.
 The framework can be accessed at \url{https://github.com/shreyansh05s/SPORT}.
 \keywords{DETR  \and DeepSort \and SportsMot.}
@@ -55,6 +55,7 @@ Improved object recognition and tracking can be used in many applications such a
 In sports, object recognition and tracking can be used to analyze the performance of the players and the team.
 It can also be used to analyze the performance of the referee and the umpire.
 The data generated from object recognition and tracking can be used for downstream tasks such as player tracking, player action recognition, and player pose estimation.
+This makes it vital to improve the accuracy of object recognition and tracking in sports.
 
 Object recognition and tracking in sports is a challenging task due to the fast movement of the players and the ball.
 The players and the ball can be occluded by other players or the referee.
@@ -101,9 +102,7 @@ One such example is the DETR model \cite{detr2020}.
 The DETR model uses a transformer \cite{transformer2017} to detect the objects in each frame of the video.
 The transformer is a neural network architecture that uses attention to process the input data.
 The DETR model uses a pre-trained ResNet-50 \cite{resnet2015} as the backbone.
-The ResNet-50 is used to extract the features from the input image.
-The extracted features are then passed to the transformer.
-The transformer is used to detect the objects in the image.
+The ResNet-50 is used to extract the features from the input image after which the extracted features are passed to the transformer.
 The transformer outputs the bounding boxes and the class labels of the detected objects.
 
 
@@ -112,7 +111,7 @@ The Deep SORT algorithm uses a pre-trained object detection model to detect the 
 The detected objects are then tracked across the frames of the video using the Kalman filter \cite{kalman1960new}.
 The Kalman filter is used to predict the position of the objects in the next frame of the video.
 The objects are then assigned to the predicted position based on the similarity between the predicted position and the detected position.
-The similarity is calculated using the Hungarian algorithm \cite{hungarian1955}.
+The similarity is calculated using the Hungarian algorithm \cite{hungarian1955} for which features are extracted from the detected objects using a pre-trained model.
 This process is repeated for each frame of the video.
 
 
@@ -123,7 +122,7 @@ This process is repeated for each frame of the video.
 
 SportsMot dataset \cite{cui2023sportsmot} is a large-scale dataset for multi-object tracking in sports.
 The objective of the dataset is to detect and track the players exclusively.
-Both Train and Validation sets contain 854 videos, whereas Test set contains 2849 videos.
+Both Train and Validation sets contain 45 videos, whereas Test set contains 150 videos.
 
 \subsection{Data Processing}
 The dataset is provided in the form of frames which are stored as images.
@@ -158,9 +157,9 @@ The data loader is used to load the dataset optimally.
 The second component are the models.
 The models are used to detect and track the objects in the videos.
 Currently there are two types of models: object detection models and object tracking models.
-For Object Detection, the DETR model \cite{detr2020} and Conditional DETR model \cite{conditionaldetr2021} are implemented.
+For Object Detection, the DETR model \cite{detr2020} and Conditional DETR model \cite{conditionaldetr2021} are implemented which are pre-trained on the COCO dataset \cite{coco2014}.
 And for Object Tracking, the Deep SORT algorithm \cite{DBLP:journals/corr/abs-1907-03465} is implemented.
-The third component is the evaluation.
+The third component is the evaluation and inference component.
 The evaluation component is used to evaluate the performance of the models.
 The inference is done on the validation or test set and the results are generated in the format required by the SportsMot dataset.
 The results can then be uploaded to the SportsMot website for evaluation.
@@ -194,10 +193,32 @@ So most time was spent on creating a framework that can be used to compare diffe
 
 \section{Conclusion}
 % TODO: Write conclusion
+To conclude, the field of object detection and tracking has seen a lot of progress in the last few years.
+With the introduction of SportsMot dataset, it has even more practical applications it can be used for.
+Automatic annotation of sports videos can be used to generate highlights of the match.
+With even better hardware they can be used in real-time to generate live highlights of the match.
+This can be used to improve the experience of the viewers and also help the coaches in analyzing the performance of the players.
+
+Accessing and setting up the dataset for benchmarking with a baseline model can be a challenging and time consuming task.
+The framework proposed in this paper can be used to fasten this process.
+With rapid improvements, this framework allows for easy integration of new models.
 
 \section{Future Work}
 % TODO: Write future work
+For future work, the framework can be extended to include more models.
+Currently only two models are implemented for object detection and one for object tracking.
+More models can be added to the framework to allow for more comparisons.
+The framework can also be extended to include more datasets.
 
+Additionally, only pretrained models were utlized for this project.
+Using the framework finetuning can be done in order to improve the performance of the models for the SportsMot dataset.
+This will acheive better results and can be used to publish results for competition.
+But this will require a lot of computational resources and time.
+
+Another area of improvement is the hyperparameter tuning.
+Currently the hyperparameters are set to the default values.
+But with hyperparameter tuning the performance of the models can be improved.
+Either by using a grid search or by using a more advanced method like Bayesian optimization.
 
 % %
 % ---- Bibliography ----
