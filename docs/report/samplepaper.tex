@@ -40,7 +40,7 @@ Sports object recognition and tracking is a challenging task in computer vision.
 This paper presents and compares different methods for object recognition and tracking in sports videos.
 Th focus lies on utilizing pre-trained models to reduce the training time and improve the accuracy of the model.
 Along with the comparison, a framework is proposed to evaluate the performance of the models.
-
+The framework can be accessed at \url{https://github.com/shreyansh05s/SPORT}.
 \keywords{DETR  \and DeepSort \and SportsMot.}
 \end{abstract}
 %
@@ -77,28 +77,44 @@ Usually, the task of object recognition and tracking is tackled in two steps.
 First, the objects are detected in each frame of the video.
 Second, the detected objects are tracked across the frames of the video.
 This is also commonly known as the tracking-by-detection approach.
+One such example for tracking-by-detection approach is the Deep SORT algorithm \cite{DBLP:journals/corr/abs-1907-03465}.
 
+In recent years, there has also been a lot of progress in end-to-end object recognition and tracking.
+But for the purpose of this paper, we will focus on the tracking-by-detection approach.
 
-In recent years, there has also been a lot of progress end-to-end object recognition and tracking.
-
+% One such example is the 
 
 
 \subsection{Object Detection}
+% Explain a little bit about how yolo made a breakthrough in object detection
+% Then introduce DETR
+% Explain how DETR works
+
+Yolo \cite{yolo2015} made a breakthrough in object detection by introducing a single neural network for object detection.
+Before Yolo, object detection was done using two neural networks.
+The first neural network was used to generate the region proposals.
+The second neural network was used to classify the region proposals.
+This made the object detection pipeline slow and inefficient.
+
+After Yolo, many other single neural network object detection models were introduced.
+One such example is the DETR model \cite{detr2020}.
+The DETR model uses a transformer \cite{transformer2017} to detect the objects in each frame of the video.
+The transformer is a neural network architecture that uses attention to process the input data.
+The DETR model uses a pre-trained ResNet-50 \cite{resnet2015} as the backbone.
+The ResNet-50 is used to extract the features from the input image.
+The extracted features are then passed to the transformer.
+The transformer is used to detect the objects in the image.
+The transformer outputs the bounding boxes and the class labels of the detected objects.
+
 
 \subsection{Object Tracking}
+The Deep SORT algorithm uses a pre-trained object detection model to detect the objects in each frame of the video.
+The detected objects are then tracked across the frames of the video using the Kalman filter \cite{kalman1960new}.
+The Kalman filter is used to predict the position of the objects in the next frame of the video.
+The objects are then assigned to the predicted position based on the similarity between the predicted position and the detected position.
+The similarity is calculated using the Hungarian algorithm \cite{hungarian1955}.
+This process is repeated for each frame of the video.
 
-
-
-\subsection{A Subsection Sample}
-Please note that the first paragraph of a section or subsection is
-not indented. The first paragraph that follows a table, figure,
-equation etc. does not need an indent, either.
-
-Subsequent paragraphs, however, are indented.
-
-\subsubsection{Sample Heading (Third Level)} Only two levels of
-headings should be numbered. Lower level headings remain unnumbered;
-they are formatted as run-in headings.
 
 \paragraph{Sample Heading (Fourth Level)}
 The contribution should contain no more than four levels of
