@@ -48,7 +48,6 @@ class ObjectDetectionModel(torch.nn.Module):
         """Initialize the model."""
         super().__init__()
 
-        self.train = train
         self.args = args
         
         self.threshold = models[args.model]["threshold"]
@@ -69,34 +68,44 @@ class ObjectDetectionModel(torch.nn.Module):
         if args.model_dir:
             self.model.load_state_dict(torch.load(args.model_dir))
 
-        self.inputs_list = ["pixel_values", "pixel_mask", "labels"]
+        self.inputs_list = ["pixel_values", "pixel_mask"]
 
-        if not train:
-            self.model.eval()
-            self.inputs_list = ["pixel_values", "pixel_mask"]
-
-            self.image_processor = AutoImageProcessor.from_pretrained(
-                args.pretrained_model, config=self.config
-            )
+        # Load the image processor
+        self.image_processor = AutoImageProcessor.from_pretrained(
+            args.pretrained_model, config=self.config
+        )
 
         return
 
-    def forward(self, x):
-        """Forward pass of the model."""
-
+    def forward(self, x, train=False):
+        """Forward pass of the model."""      
+          
         inputs = {
             k: v.to(self.args.device) for k, v in x.items() if k in self.inputs_list
         }
+        
+        if "labels" in x:
+            # labels is a List[Dict[Tensor]] where the size of the list is the batch size
+            # now we need to put all the tensors to device
+            labels = [{k: v.to(self.args.device) for k, v in l.items()} for l in x["labels"]]
+            inputs["labels"] = labels
 
+        # forward pass
         outputs = self.model(**inputs)
 
         # post process if eval mode
-        if not self.train:
+        if not train:
+            
+            # target_sizes should be a tensor of shape (batch_size, 2)
+            # also check if it has no batch dimension
+
+            target_sizes = torch.tensor([(720, 1280)] * self.args.batch_size)
+            
             coco_data = self.image_processor.post_process_object_detection(
-                outputs, threshold=self.threshold, target_sizes=torch.tensor([(720, 1280)])
+                outputs, threshold=self.threshold, target_sizes=target_sizes
             )[0]
 
-            # filter results by label for person
+            # filter results by label for person or no object
             label_mask = coco_data["labels"] == 1
 
             pred_boxes = coco_data["boxes"][label_mask]

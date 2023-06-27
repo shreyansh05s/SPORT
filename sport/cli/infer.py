@@ -7,8 +7,8 @@ from tqdm.auto import tqdm
 
 import torch
 import numpy as np
-from sport import SportsMOTDataset, get_pretrained
-from sport.detector import ObjectDetectionModel
+from sport import SportsMOTDataset
+from sport.detector import ObjectDetectionModel, get_pretrained
 from sport.tracker import ObjectTrackingModel
 
 

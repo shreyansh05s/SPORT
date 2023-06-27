@@ -26,6 +26,7 @@ dependencies = [
     "deep_sort_realtime",
     "pycocotools",
     "streamlit",
+    "evaluate",
 ]
 requires-python = ">=3.11"
 

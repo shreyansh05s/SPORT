@@ -5,7 +5,9 @@ import os
 import argparse
 
 import torch
-from sport.cli import eval, infer, demo, add_eval_args, add_infer_args
+from sport.cli import infer, demo, train
+from sport.cli.infer import add_infer_args
+from sport.cli.train import add_train_args
 from sport import get_project_dir
 
 def main() -> None:
@@ -18,12 +20,13 @@ def main() -> None:
     )
 
     subparsers = parser.add_subparsers(dest="cmd", help="Choose a command")
-    # subparser_train = subparsers.add_parser("train", help="Train the model")
-    subparser_eval = subparsers.add_parser("eval", help="Evaluate the model")
+    subparser_train = subparsers.add_parser("train", help="Train the model")
+    # subparser_eval = subparsers.add_parser("eval", help="Evaluate the model")
     subparser_infer = subparsers.add_parser("infer", help="Infer the model")
     subparser_demo = subparsers.add_parser("demo", help="Run the demo")
 
-    subparser_eval = add_eval_args(add_common_args(subparser_eval))
+    subparser_train = add_train_args(add_common_args(subparser_train))
+    # subparser_eval = add_eval_args(add_common_args(subparser_eval))
     subparser_infer = add_infer_args(add_common_args(subparser_infer))
     subparser_demo = add_common_args(subparser_demo)
 
@@ -33,12 +36,12 @@ def main() -> None:
     
     args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    if args.cmd == "eval":
-        eval(args)
-    elif args.cmd == "infer":
+    if args.cmd == "infer":
         infer(args)
     elif args.cmd == "demo":
         demo(args)
+    elif args.cmd == "train":
+        train.train(args)
     else:
         raise ValueError(f"Unknown command: {args.cmd}")
 
@@ -78,8 +81,8 @@ def add_common_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     )    
     parser.add_argument("--num_labels", help="Number of labels", type=int, default=None)
     parser.add_argument("--num_workers", help="Number of workers", type=int, default=4)
-    parser.add_argument("--epochs", help="Number of epochs", type=int, default=10)
-    parser.add_argument("--lr", help="Learning rate", type=float, default=1e-4)
+    # parser.add_argument("--epochs", help="Number of epochs", type=int, default=10)
+    # parser.add_argument("--lr", help="Learning rate", type=float, default=1e-4)
     parser.add_argument("--model_dir", help="Model directory", type=str, default=None)
 
     #############################
