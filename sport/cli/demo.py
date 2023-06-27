@@ -62,6 +62,7 @@ def demo(args: argparse.Namespace) -> None:
     
     # drop down menu to select the video type
     video_type = st.selectbox("Select Video Type", ["football", "basketball", "volleyball"])
+    st.write(f"This runs a random video from the {video_type} dataset in the validation set.")
     
     video_names = open(os.path.join(get_project_dir(), args.splits_dir, f"{video_type}.txt")).read().splitlines()
     
