@@ -44,7 +44,7 @@ models = {
 class ObjectDetectionModel(torch.nn.Module):
     """Object Detection Model."""
 
-    def __init__(self, args, train=False) -> None:
+    def __init__(self, args, train=True) -> None:
         """Initialize the model."""
         super().__init__()
 
@@ -77,7 +77,7 @@ class ObjectDetectionModel(torch.nn.Module):
 
         return
 
-    def forward(self, x, train=False):
+    def forward(self, x, train=True):
         """Forward pass of the model."""      
           
         inputs = {
@@ -99,7 +99,7 @@ class ObjectDetectionModel(torch.nn.Module):
             # target_sizes should be a tensor of shape (batch_size, 2)
             # also check if it has no batch dimension
 
-            target_sizes = torch.tensor([(720, 1280)] * self.args.batch_size)
+            target_sizes = torch.tensor([(720, 1280)] * len(x["pixel_values"])).to(self.args.device)
             
             coco_data = self.image_processor.post_process_object_detection(
                 outputs, threshold=self.threshold, target_sizes=target_sizes

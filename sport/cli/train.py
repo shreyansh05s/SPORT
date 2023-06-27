@@ -61,17 +61,15 @@ def train(args: argparse.Namespace) -> None:
     for epoch in tqdm_bar:
         # train for one epoch
         model = train_one_epoch(
-            model, optimizer, train_loader, args.device, epoch, args, tqdm_bar
+            model, optimizer, scheduler, train_loader, args.device, epoch, args, tqdm_bar
         )
-
-        # update the learning rate
-        scheduler.step()
 
         # evaluate on the validation dataset
         # evaluate(model, val_loader, args.device, epoch, args, tqdm_bar)
 
         # save the model
-        torch.save(model.state_dict(), os.path.join(f"{args.model}-epoch-{epoch}.pth"))
+        if not os.path.exists("models"): os.mkdir("models")
+        torch.save(model.state_dict(), os.path.join("models", f"{args.model}-epoch-{epoch}.pth"))
 
     return
 
@@ -79,6 +77,7 @@ def train(args: argparse.Namespace) -> None:
 def train_one_epoch(
     model: ObjectDetectionModel,
     optimizer: torch.optim.Optimizer,
+    scheduler: torch.optim.lr_scheduler,
     data_loader: torch.utils.data.DataLoader,
     device: torch.device,
     epoch: int,
@@ -101,8 +100,9 @@ def train_one_epoch(
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        scheduler.step()
 
-        tqdm_bar.set_postfix(loss=loss.item(), percent=i / len(data_loader))
+        tqdm_bar.set_postfix(loss=loss.item(), percent=i / len(data_loader), lr=scheduler.get_last_lr()[0])
 
     return model
 
@@ -155,7 +155,7 @@ def add_train_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "--num_epochs",
         type=int,
-        default=5,
+        default=20,
         help="Number of epochs to train the model for.",
     )
     parser.add_argument(
@@ -167,19 +167,19 @@ def add_train_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument(
         "--lr_step_size",
         type=int,
-        default=10,
+        default=10000,
         help="Step size for the scheduler.",
     )
     parser.add_argument(
         "--lr_gamma",
         type=float,
-        default=0.5,
+        default=0.95,
         help="Gamma for the scheduler.",
     )
     parser.add_argument(
         "--weight_decay",
         type=float,
-        default=0.0,
+        default=1e-4,
         help="Weight decay for the optimizer.",
     )
     parser.add_argument(
