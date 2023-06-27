@@ -10,13 +10,17 @@ dataset/
 outputs/
 models/
 *Zone.Identifier
+data/
+results/
+TrackEval/
+outputs2/
+
+# latex
 *.log
 *.fls
 *.aux
 *.fdb_latexmk
 *.synctex.gz
-data/
-results/
-TrackEval/
-outputs2/
+*.bbl
+*.blg
 ```

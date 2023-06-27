@@ -47,6 +47,48 @@ Along with the comparison, a framework is proposed to evaluate the performance o
 %
 %
 \section{Introduction}
+% talk about dataset automatically generated and why it is important
+% talk about the importance of object recognition and tracking in sports
+% How this data can be used for downstream tasks
+In recent years, the field of computer vision has seen a lot of progress in object recognition and tracking.
+Improved object recognition and tracking can be used in many applications such as autonomous driving, surveillance, and sports analysis.
+In sports, object recognition and tracking can be used to analyze the performance of the players and the team.
+It can also be used to analyze the performance of the referee and the umpire.
+The data generated from object recognition and tracking can be used for downstream tasks such as player tracking, player action recognition, and player pose estimation.
+
+Object recognition and tracking in sports is a challenging task due to the fast movement of the players and the ball.
+The players and the ball can be occluded by other players or the referee.
+The players can also be occluded by the audience.
+This makes it difficult to track the players and the ball.
+
+In this paper, we present and compare different methods for object recognition and tracking in sports videos.
+The focus lies on utilizing pre-trained models to reduce the training time and improve the accuracy of the model.
+Along with the comparison, a framework is proposed to allow faster setup and evaluation of the models.
+
+For the comparison, we use the SportsMot dataset \cite{cui2023sportsmot}.
+The SportsMot dataset is a large-scale dataset for multi-object tracking in sports.
+It contains videos of different sports such as basketball, football, and volleyball.
+This makes it suitable for comparing different methods for object recognition and tracking in sports.
+MOT-16 and MOT-17 datasets \cite{milan2016mot16} are also popular datasets for multi-object tracking.
+
+
+\section{Related Work}
+Usually, the task of object recognition and tracking is tackled in two steps.
+First, the objects are detected in each frame of the video.
+Second, the detected objects are tracked across the frames of the video.
+This is also commonly known as the tracking-by-detection approach.
+
+
+In recent years, there has also been a lot of progress end-to-end object recognition and tracking.
+
+
+
+\subsection{Object Detection}
+
+\subsection{Object Tracking}
+
+
+
 \subsection{A Subsection Sample}
 Please note that the first paragraph of a section or subsection is
 not indented. The first paragraph that follows a table, figure,
@@ -112,39 +154,41 @@ For citations of references, we prefer the use of square brackets
 and consecutive numbers. Citations using labels or the author/year
 convention are also acceptable. The following bibliography provides
 a sample reference list with entries for journal
-articles~\cite{ref_article1}, an LNCS chapter~\cite{ref_lncs1}, a
-book~\cite{ref_book1}, proceedings without editors~\cite{ref_proc1},
-and a homepage~\cite{ref_url1}. Multiple citations are grouped
-\cite{ref_article1,ref_lncs1,ref_book1},
-\cite{ref_article1,ref_book1,ref_proc1,ref_url1}.
-%
+% articles~\cite{ref_article1}, an LNCS chapter~\cite{ref_lncs1}, a
+% book~\cite{ref_book1}, proceedings without editors~\cite{ref_proc1},
+% and a homepage~\cite{ref_url1}. Multiple citations are grouped
+% \cite{ref_article1,ref_lncs1,ref_book1},
+% \cite{ref_article1,ref_book1,ref_proc1,ref_url1}.
+% %
 % ---- Bibliography ----
 %
 % BibTeX users should specify bibliography style 'splncs04'.
 % References will then be sorted and formatted in the correct style.
 %
-% \bibliographystyle{splncs04}
-% \bibliography{mybibliography}
-%
-\begin{thebibliography}{8}
-\bibitem{ref_article1}
-Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
+\bibliographystyle{splncs04}
+\bibliography{samplepaper}
+% include references even if they are not cited in the text
+\nocite{*}
 
-\bibitem{ref_lncs1}
-Author, F., Author, S.: Title of a proceedings paper. In: Editor,
-F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
-Springer, Heidelberg (2016). \doi{10.10007/1234567890}
+% \begin{thebibliography}{8}
+% \bibitem{ref_article1}
+% Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
 
-\bibitem{ref_book1}
-Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
-Location (1999)
+% \bibitem{ref_lncs1}
+% Author, F., Author, S.: Title of a proceedings paper. In: Editor,
+% F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
+% Springer, Heidelberg (2016). \doi{10.10007/1234567890}
 
-\bibitem{ref_proc1}
-Author, A.-B.: Contribution title. In: 9th International Proceedings
-on Proceedings, pp. 1--2. Publisher, Location (2010)
+% \bibitem{ref_book1}
+% Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
+% Location (1999)
 
-\bibitem{ref_url1}
-LNCS Homepage, \url{http://www.springer.com/lncs}. Last accessed 4
-Oct 2017
-\end{thebibliography}
+% \bibitem{ref_proc1}
+% Author, A.-B.: Contribution title. In: 9th International Proceedings
+% on Proceedings, pp. 1--2. Publisher, Location (2010)
+
+% \bibitem{ref_url1}
+% LNCS Homepage, \url{http://www.springer.com/lncs}. Last accessed 4
+% Oct 2017
+% \end{thebibliography}
 \end{document}
