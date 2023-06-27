@@ -47,7 +47,7 @@ def infer(args: argparse.Namespace) -> None:
     
     for i, inputs in enumerate(tqdm_bar):
         # forward pass
-        _, pred_boxes = object_detector(inputs)
+        _, pred_boxes = object_detector(inputs, train=False)
 
         # track objects
         tracked_objects = tracker.track(
