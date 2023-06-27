@@ -91,13 +91,13 @@ But for the purpose of this paper, we will focus on the tracking-by-detection ap
 % Then introduce DETR
 % Explain how DETR works
 
-Yolo \cite{yolo2015} made a breakthrough in object detection by introducing a single neural network for object detection.
-Before Yolo, object detection was done using two neural networks.
+YOLO \cite{yolo2015} made a breakthrough in object detection by introducing a single neural network for object detection.
+Before YOLO, object detection was done using two neural networks.
 The first neural network was used to generate the region proposals.
 The second neural network was used to classify the region proposals.
 This made the object detection pipeline slow and inefficient.
 
-After Yolo, many other single neural network object detection models were introduced.
+After YOLO, many other single neural network object detection models were introduced.
 One such example is the DETR model \cite{detr2020}.
 The DETR model uses a transformer \cite{transformer2017} to detect the objects in each frame of the video.
 The transformer is a neural network architecture that uses attention to process the input data.
@@ -186,8 +186,9 @@ The main challenge faced during the project was the training time and computatio
 The time required to train the models was very high.
 And adding the time needed to do hyperparameter tuning made it even worse.
 This made it difficult to achieve the desired results and come up with a new model.
+Fine tuning was performed  on the DETR model for SportsMot dataset, but due to computational constraints good results were not achieved.
 
-Reprocucibility is also a challenge in deep learning.
+Reproducability is also a challenge in deep learning.
 Trying to compare the results of different models is difficult as each needs a different environment and dataset loading pipeline.
 So most time was spent on creating a framework that can be used to compare different models on the same dataset.
 
@@ -210,9 +211,9 @@ Currently only two models are implemented for object detection and one for objec
 More models can be added to the framework to allow for more comparisons.
 The framework can also be extended to include more datasets.
 
-Additionally, only pretrained models were utlized for this project.
+Additionally, only pretrained models were utilized for this project.
 Using the framework finetuning can be done in order to improve the performance of the models for the SportsMot dataset.
-This will acheive better results and can be used to publish results for competition.
+This will achieve better results and can be used to publish results for competition.
 But this will require a lot of computational resources and time.
 
 Another area of improvement is the hyperparameter tuning.
