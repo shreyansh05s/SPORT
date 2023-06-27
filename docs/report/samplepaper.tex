@@ -116,65 +116,89 @@ The similarity is calculated using the Hungarian algorithm \cite{hungarian1955}.
 This process is repeated for each frame of the video.
 
 
-\paragraph{Sample Heading (Fourth Level)}
-The contribution should contain no more than four levels of
-headings. Table~\ref{tab1} gives a summary of all heading levels.
+\section{Dataset}
+% Explain a little bit about the dataset SportsMot
+% Explain how loading was optimized
+% then add section about evaluation metrics
 
-\begin{table}
-\caption{Table captions should be placed above the
-tables.}\label{tab1}
-\begin{tabular}{|l|l|l|}
-\hline
-Heading level &  Example & Font size and style\\
-\hline
-Title (centered) &  {\Large\bfseries Lecture Notes} & 14 point, bold\\
-1st-level heading &  {\large\bfseries 1 Introduction} & 12 point, bold\\
-2nd-level heading & {\bfseries 2.1 Printing Area} & 10 point, bold\\
-3rd-level heading & {\bfseries Run-in Heading in Bold.} Text follows & 10 point, bold\\
-4th-level heading & {\itshape Lowest Level Heading.} Text follows & 10 point, italic\\
-\hline
-\end{tabular}
-\end{table}
+SportsMot dataset \cite{cui2023sportsmot} is a large-scale dataset for multi-object tracking in sports.
+The objective of the dataset is to detect and track the players exclusively.
+Both Train and Validation sets contain 854 videos, whereas Test set contains 2849 videos.
 
+\subsection{Data Processing}
+The dataset is provided in the form of frames which are stored as images.
+The dataset needs to be loaded sequentially for evaluation and inference.
+This can be a bottleneck for the evaluation and inference of the models.
+But for training object detection models, the dataset can be loaded in parallel.
+For this an optimized data loader was implemented.
+With a higher number of workers and a larger batch size, the training time can be reduced significantly.
 
-\noindent Displayed equations are centered and set on a separate
-line.
-\begin{equation}
-x + y = z
-\end{equation}
-Please try to avoid rasterized images for line-art diagrams and
-schemas. Whenever possible, use vector graphics instead (see
-Fig.~\ref{fig1}).
+Apart from loading the images they also need to be processed before they can be used for training.
+Preprocessing includes resizing, normalization, augmentation and converting to tensors.
+These operations are specific for each model and are accessed from the pretrained model coonfigurations.
+Huggingface's transformers library \cite{wolf-etal-2020-transformers} is used for this purpose.
+
+% \subsection{Evaluation Metrics}
+% The evaluation metrics used for the comparison are the same as the ones used in the SportsMot dataset.
+% HTOP 
+
+\section{Framework}
+% Explain how the models were implemented
+% Exaplain the framework
+% Explain how the framework can be used to evaluate other models
+% Explain the demo website for viewing the results
+The purpose of the framework is to allow faster setup and evaluation of the models on SportsMot dataset.
+The framework is implemented using PyTorch \cite{pytorch2019} and Huggingface's transformers library \cite{wolf-etal-2020-transformers}.
+It is designed to be modular and extensible.
+This makes it easier to compare different models on the same dataset.
+
+The framework consists of three main components.
+The first component is the data loader.
+The data loader is used to load the dataset optimally.
+The second component are the models.
+The models are used to detect and track the objects in the videos.
+Currently there are two types of models: object detection models and object tracking models.
+For Object Detection, the DETR model \cite{detr2020} and Conditional DETR model \cite{conditionaldetr2021} are implemented.
+And for Object Tracking, the Deep SORT algorithm \cite{DBLP:journals/corr/abs-1907-03465} is implemented.
+The third component is the evaluation.
+The evaluation component is used to evaluate the performance of the models.
+The inference is done on the validation or test set and the results are generated in the format required by the SportsMot dataset.
+The results can then be uploaded to the SportsMot website for evaluation.
+
+The framework also includes a demo website for viewing the results.
+The demo website is implemented using Streamlit.
+This makes it easier to view the results of the models.
+An example of the demo website can be seen in Figure~\ref{fig:sport_demo}.
 
 \begin{figure}
-\includegraphics[width=\textwidth]{fig1.eps}
-\caption{A figure caption is always placed below the illustration.
-Please note that short captions are centered, while long ones are
-justified by the macro package automatically.} \label{fig1}
+    \centering
+    \includegraphics[width=\textwidth,height=13cm,keepaspectratio]{images/sport_demo.png}
+    \caption{Demo website for viewing the results}
+    \label{fig:sport_demo}
 \end{figure}
 
-\begin{theorem}
-This is a sample theorem. The run-in heading is set in bold, while
-the following text appears in italics. Definitions, lemmas,
-propositions, and corollaries are styled the same way.
-\end{theorem}
-%
-% the environments 'definition', 'lemma', 'proposition', 'corollary',
-% 'remark', and 'example' are defined in the LLNCS documentclass as well.
-%
-\begin{proof}
-Proofs, examples, and remarks have the initial word in italics,
-while the following text appears in normal font.
-\end{proof}
-For citations of references, we prefer the use of square brackets
-and consecutive numbers. Citations using labels or the author/year
-convention are also acceptable. The following bibliography provides
-a sample reference list with entries for journal
-% articles~\cite{ref_article1}, an LNCS chapter~\cite{ref_lncs1}, a
-% book~\cite{ref_book1}, proceedings without editors~\cite{ref_proc1},
-% and a homepage~\cite{ref_url1}. Multiple citations are grouped
-% \cite{ref_article1,ref_lncs1,ref_book1},
-% \cite{ref_article1,ref_book1,ref_proc1,ref_url1}.
+
+\section{Challenges}
+% Explain the challenges faced during the project
+% Training time and computational resources
+% Explain why the models were not finetuned
+
+The main challenge faced during the project was the training time and computational resources.
+The time required to train the models was very high.
+And adding the time needed to do hyperparameter tuning made it even worse.
+This made it difficult to achieve the desired results and come up with a new model.
+
+Reprocucibility is also a challenge in deep learning.
+Trying to compare the results of different models is difficult as each needs a different environment and dataset loading pipeline.
+So most time was spent on creating a framework that can be used to compare different models on the same dataset.
+
+\section{Conclusion}
+% TODO: Write conclusion
+
+\section{Future Work}
+% TODO: Write future work
+
+
 % %
 % ---- Bibliography ----
 %
@@ -186,25 +210,4 @@ a sample reference list with entries for journal
 % include references even if they are not cited in the text
 \nocite{*}
 
-% \begin{thebibliography}{8}
-% \bibitem{ref_article1}
-% Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
-
-% \bibitem{ref_lncs1}
-% Author, F., Author, S.: Title of a proceedings paper. In: Editor,
-% F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
-% Springer, Heidelberg (2016). \doi{10.10007/1234567890}
-
-% \bibitem{ref_book1}
-% Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
-% Location (1999)
-
-% \bibitem{ref_proc1}
-% Author, A.-B.: Contribution title. In: 9th International Proceedings
-% on Proceedings, pp. 1--2. Publisher, Location (2010)
-
-% \bibitem{ref_url1}
-% LNCS Homepage, \url{http://www.springer.com/lncs}. Last accessed 4
-% Oct 2017
-% \end{thebibliography}
 \end{document}
