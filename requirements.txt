@@ -1,0 +1,2 @@
+# Additional dependencies for Embedding layer for Tracker
+git+https://github.com/openai/CLIP.git

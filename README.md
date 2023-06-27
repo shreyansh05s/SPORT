@@ -4,9 +4,26 @@ Sports Object Recognition and Tracking
 ## Requirements
 - Python 3.11 or higher
 
+## Setup Environment (Optional but recommended)
+Create a virtual environment
+```bash
+python -m venv .venv
+```
+
+Activate the virtual environment
+For windows
+```bash
+.venv\Scripts\activate.bat
+```
+
+For Linux
+```bash
+source .venv/bin/activate
+```
+
 ## Installation
 ```bash
-pip install -e .
+pip install -e . -r requirements.txt
 ```
 
 ## Dataset
