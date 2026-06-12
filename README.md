@@ -82,7 +82,20 @@ Other arguments:
 
 Other arguments can be found using `sport train --help`
 
+## Known-Working Environment
+
+| Property | Value |
+|----------|-------|
+| OS | Ubuntu 22.04 / Windows 11 |
+| Python | 3.11 |
+| PyTorch | 2.0+ |
+| CUDA | Optional (CPU supported) |
+
 ## References
 
 [1] SportsMOT: A Large Multi-Object Tracking Dataset in Multiple Sports Scenes
 \[[arXiv](https://arxiv.org/abs/2109.14834)\]
+
+## Course Context
+
+Sports Data Science — Semester 1, VU Amsterdam AI Master's programme.
