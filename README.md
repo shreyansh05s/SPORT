@@ -98,4 +98,4 @@ Other arguments can be found using `sport train --help`
 
 ## Course Context
 
-Sports Data Science — Semester 1, VU Amsterdam AI Master's programme.
+Sports Data Science — Semester 1, Leiden University MSc Computer Science (AI) programme.
